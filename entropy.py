@@ -35,6 +35,8 @@ def start():
     print("Read {:,} bytes in {:.3f} seconds ({:,}/second)".format(size,elapsed,int(size/elapsed)))
 
     mean = statistics.fmean(count)
+    mean2 = statistics.mean(count)
+    print("integer mean: {}".format(mean2))
     variance = statistics.variance(count,mean)
     stdev = statistics.stdev(count,mean)
 

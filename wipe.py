@@ -1,6 +1,8 @@
 #! /usr/bin/env python
-import argparse
-import os,sys
+#pylint: disable=missing-module-docstring,missing-function-docstring,invalid-name
+# import argparse
+import os
+import sys
 import shutil
 import tempfile
 import mmap
@@ -9,7 +11,7 @@ import secrets
 
 
 def start():
-    chunksize=1024*4096
+    chunksize = 1024*4096
     total, used, free = shutil.disk_usage(".")
     print("{:,} bytes free space.".format(free))
     try:
@@ -17,41 +19,41 @@ def start():
 #        iters = 10
         leftover = (free % chunksize)
 #        leftover = 0
-        print("Planning for {:,} blocks of {:,} bytes each + {:,} final bytes.".format(iters,chunksize,leftover))
+        print("Planning for {:,} blocks of {:,} bytes each + {:,} final bytes.".format(iters, chunksize, leftover))
         tmpdir = tempfile.mkdtemp(dir=".")
         step = 1024 * 1024
         begin = timeit.default_timer()
         for i in range(iters):
-            start = timeit.default_timer()
+            starttime = timeit.default_timer()
             outfile, filename = tempfile.mkstemp(dir=tmpdir)
             print(filename)
-            time1=timeit.default_timer()
-            mm=mmap.mmap(outfile,chunksize,access=mmap.ACCESS_WRITE)
-            time2=timeit.default_timer()
+            time1 = timeit.default_timer()
+            mm = mmap.mmap(outfile, chunksize, access=mmap.ACCESS_WRITE)
+            time2 = timeit.default_timer()
             for j in range(chunksize):
-                mm[j]=0
+                mm[j] = 0
             mm.flush
-            time3=timeit.default_timer()
+            time3 = timeit.default_timer()
             for j in range(chunksize):
-                mm[j]=255
+                mm[j] = 255
             mm.flush
-            time4=timeit.default_timer()
-            randoms=secrets.token_bytes(chunksize)
+            time4 = timeit.default_timer()
+            randoms = secrets.token_bytes(chunksize)
             for j in range(chunksize):
-                mm[j]=randoms[j]
+                mm[j] = randoms[j]
             mm.flush
-            time5=timeit.default_timer()
+            time5 = timeit.default_timer()
             mm.close
             os.close(outfile)
-            time6=timeit.default_timer()
-            print("{}/{} wrote {} bytes in {:.2f} seconds ({:,} per second)".format(i,iters,chunksize, time6-start, int(chunksize/(time6-start))))
-        if (leftover > 0):
+            time6 = timeit.default_timer()
+            print("{}/{} wrote {} bytes in {:.2f} seconds ({:,} per second)".format(i, iters, chunksize, time6-starttime, int(chunksize/(time6-starttime))))
+        if leftover > 0:
             outfile, filename = tempfile.mkstemp(dir=tmpdir)
             print(filename)
-            mm=mmap.mmap(outfile,leftover)
-            randoms=secrets.token_bytes(leftover)
+            mm = mmap.mmap(outfile, leftover)
+            randoms = secrets.token_bytes(leftover)
             for j in range(leftover):
-                mm[j]=randoms[j]
+                mm[j] = randoms[j]
             print("wrote {:,} bytes".format(leftover))
     except KeyboardInterrupt:
         print("Interrupted")
@@ -60,15 +62,15 @@ def start():
         os.close(outfile)
         sys.exit(1)
     except OSError as e:
-        z=e
-        print("Got an OSError: {}",format(e))
+        z = e
+        print("Got an OSError: {}", format(e))
 
-    end=timeit.default_timer()
-    elapsed=end-begin
-    rate=int((iters*chunksize)/elapsed)
+    end = timeit.default_timer()
+    elapsed = end-begin
+    rate = int((iters*chunksize)/elapsed)
     total, used, free = shutil.disk_usage(".")
     print("{:,} bytes free space.".format(free))
-    print("{:.3f} elapsed, {:,} per second".format(elapsed,rate))
+    print("{:.3f} elapsed, {:,} per second".format(elapsed, rate))
 
 if __name__ == '__main__':
     start()
