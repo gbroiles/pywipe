@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-#pylint: disable=missing-module-docstring,missing-function-docstring,invalid-name
+# pylint: disable=missing-module-docstring,missing-function-docstring,invalid-name
 # import argparse
 import os
 import sys
@@ -11,15 +11,19 @@ import secrets
 
 
 def start():
-    chunksize = 1024*4096
+    chunksize = 1024 * 4096
     total, used, free = shutil.disk_usage(".")
     print("{:,} bytes free space.".format(free))
     try:
-        iters = int(free/chunksize)
-#        iters = 10
-        leftover = (free % chunksize)
-#        leftover = 0
-        print("Planning for {:,} blocks of {:,} bytes each + {:,} final bytes.".format(iters, chunksize, leftover))
+        iters = int(free / chunksize)
+        #        iters = 10
+        leftover = free % chunksize
+        #        leftover = 0
+        print(
+            "Planning for {:,} blocks of {:,} bytes each + {:,} final bytes.".format(
+                iters, chunksize, leftover
+            )
+        )
         tmpdir = tempfile.mkdtemp(dir=".")
         step = 1024 * 1024
         begin = timeit.default_timer()
@@ -46,7 +50,15 @@ def start():
             mm.close
             os.close(outfile)
             time6 = timeit.default_timer()
-            print("{}/{} wrote {} bytes in {:.2f} seconds ({:,} per second)".format(i, iters, chunksize, time6-starttime, int(chunksize/(time6-starttime))))
+            print(
+                "{}/{} wrote {} bytes in {:.2f} seconds ({:,} per second)".format(
+                    i,
+                    iters,
+                    chunksize,
+                    time6 - starttime,
+                    int(chunksize / (time6 - starttime)),
+                )
+            )
         if leftover > 0:
             outfile, filename = tempfile.mkstemp(dir=tmpdir)
             print(filename)
@@ -66,11 +78,12 @@ def start():
         print("Got an OSError: {}", format(e))
 
     end = timeit.default_timer()
-    elapsed = end-begin
-    rate = int((iters*chunksize)/elapsed)
+    elapsed = end - begin
+    rate = int((iters * chunksize) / elapsed)
     total, used, free = shutil.disk_usage(".")
     print("{:,} bytes free space.".format(free))
     print("{:.3f} elapsed, {:,} per second".format(elapsed, rate))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     start()
