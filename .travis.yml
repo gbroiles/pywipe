@@ -1,4 +1,7 @@
 language: python
 script:
-- python -m pytest
+  - python -m pytest
+before-install:
+  - sudo apt-get update
+  - sudo apt-get -y install libssl-dev
 
