@@ -1,9 +1,6 @@
 git:
   quiet: true        
 language: python
-before-install:
-  - sudo apt-get update
-  - sudo apt-get -y install libssl-dev python3-openssl libsasl2-dev python-dev libldap2-dev 
 script:
   - python -m pytest
 
