@@ -25,28 +25,27 @@ def start():
             )
         )
         tmpdir = tempfile.mkdtemp(dir=".")
-        step = 1024 * 1024
         begin = timeit.default_timer()
         for i in range(iters):
             starttime = timeit.default_timer()
             outfile, filename = tempfile.mkstemp(dir=tmpdir)
             print(filename)
-            time1 = timeit.default_timer()
+            #            time1 = timeit.default_timer()
             mm = mmap.mmap(outfile, chunksize, access=mmap.ACCESS_WRITE)
-            time2 = timeit.default_timer()
+            #            time2 = timeit.default_timer()
             for j in range(chunksize):
                 mm[j] = 0
             mm.flush
-            time3 = timeit.default_timer()
+            #            time3 = timeit.default_timer()
             for j in range(chunksize):
                 mm[j] = 255
             mm.flush
-            time4 = timeit.default_timer()
+            #            time4 = timeit.default_timer()
             randoms = secrets.token_bytes(chunksize)
             for j in range(chunksize):
                 mm[j] = randoms[j]
             mm.flush
-            time5 = timeit.default_timer()
+            #            time5 = timeit.default_timer()
             mm.close
             os.close(outfile)
             time6 = timeit.default_timer()
@@ -74,7 +73,6 @@ def start():
         os.close(outfile)
         sys.exit(1)
     except OSError as e:
-        z = e
         print("Got an OSError: {}", format(e))
 
     end = timeit.default_timer()

@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 import argparse
-import os, sys
-import shutil
+import os
+
+# import shutil
 import mmap
 import timeit
 import statistics
