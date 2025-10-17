@@ -1,1 +1,2 @@
 secrets
+python-ldap>=3.4.5 # not directly required, pinned by Snyk to avoid a vulnerability
